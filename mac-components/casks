@@ -1,5 +1,6 @@
 fancy_echo "Installing Brew Cask, to install OSX binaries ..."
   brew_install_or_upgrade caskroom/cask/brew-cask
+  brew_tap caskroom/versions
 
 brew_cask_list() {
   brew cask list 2> /dev/null || true
@@ -30,14 +31,14 @@ brew_cask_link() {
   fi
 }
 
-fancy_echo "Installing Alfred, for quick access to Facebook ..."
-  brew_cask_install alfred
-
-fancy_echo "Installing Caffeine, to fend off sleep ..."
-  brew_cask_install caffeine
+fancy_echo "Installing Launchbar, because it rocks ..."
+  brew_cask_install launchbar
 
 fancy_echo "Installing Google Chrome, you know you want it ..."
   brew_cask_install google-chrome
+
+fancy_echo "Installing Firefox, you know you want it too ..."
+  brew_cask_install firefox
 
 fancy_echo "Installing Dropbox, for sharing files ..."
   brew_cask_install dropbox
@@ -45,25 +46,47 @@ fancy_echo "Installing Dropbox, for sharing files ..."
 fancy_echo "Installing Google Drive, for sharing more files ..."
   brew_cask_install google-drive
 
-fancy_echo "Installing Textmate, for a good scratch pad ..."
-  brew_cask_install textmate
+fancy_echo "Installing Github, in case you forget about 'git add -p' ..."
+  brew_cask_install github
 
-fancy_echo "Installing Gitx (rownaj fork), in case you forget about 'git add -p' ..."
-  brew_cask_install gitx-rowanj
-
-fancy_echo "Installing Day-O, a better menu bar clock + calendar ..."
-  brew_cask_install day-o
+fancy_echo "Installing istat menus since it rocks ..."
+  brew_cask_install istat-menus
 
 fancy_echo "Installing F-lux, to save your eyes ..."
   brew_cask_install flux
+
+fancy_echo "Installing SimpleComic for something to do while you are compiling ..."
+  brew_cask_install simple-comic
 
 fancy_echo "Installing iTerm2, almost forgot ..."
   brew_cask_install iterm2
   # set up file extension associations, for auto-installing themes
   start_if_needed iTerm
 
-fancy_echo "Installing Macvim, of course, what took so long ..."
-  brew_cask_install macvim
+fancy_echo "Installing Adium for everything not in slack ..."
+  brew_cask_install adium
 
-fancy_echo "Linking Alfred, so that it sees casks ..."
-  brew_cask_link alfred
+fancy_echo "Installing skype, not sure why"
+  brew_cask_install skype
+
+fancy_echo "Installing CCC"
+  brew_cask_install carbon-copy-cloner
+
+fancy_echo "Installing handbrake"
+  brew_cask_install handbrake
+
+fancy_echo "Installing kaleidoscope"
+  brew_cask_install kaleidoscope
+
+fancy_echo "Installing viscosity"
+  brew_cask_install viscosity
+
+fancy_echo "Installing vlc"
+  brew_cask_install vlc
+
+fancy_echo "Installing java6 for backwards compat"
+  brew_cask_install java6
+
+fancy_echo "Installing java8"
+  brew_cask_install java
+
