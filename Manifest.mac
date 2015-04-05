@@ -14,9 +14,6 @@ mac-components/packages
 mac-components/casks
 mac-components/fonts
 mac-components/downloads
-mac-components/chruby
-common-components/ruby-environment
-mac-components/bundler
 mac-components/heroku
 mac-components/rcm
 mac-components/start-services
