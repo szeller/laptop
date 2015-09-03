@@ -37,6 +37,7 @@ fancy_echo "Installing Solarized Dark Theme for iTerm ..."
       echo "... skipping theme install, already installed"
     else
       open ~/Applications/solarized/iterm2-colors-solarized/Solarized\ Dark.itermcolors
+      open ~/Applications/solarized/iterm2-colors-solarized/Solarized\ Light.itermcolors
     fi
   else
     echo "... skipping theme install, iTerm 2 not installed"
