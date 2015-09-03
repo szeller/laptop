@@ -15,9 +15,6 @@ mac-components/casks
 mac-components/fonts
 mac-components/downloads
 mac-components/heroku
-mac-components/rcm
-mac-components/start-services
 mac-components/cleanup
-common-components/dotfiles
 common-components/personal-additions
 mac-components/todo

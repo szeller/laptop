@@ -127,27 +127,28 @@ fancy_echo "Setting OSX settings ..."
   # Disable the “Are you sure you want to open this application?” dialog
   defaults write com.apple.LaunchServices LSQuarantine -bool false
 
-  # Trackpad, mouse, keyboard, Bluetooth accessories, and input
-  #
-
-  # Disable press-and-hold for keys in favour of key repeat.
-  defaults write -g ApplePressAndHoldEnabled -bool false
-
-  # Set a really fast key repeat.
-  defaults write NSGlobalDomain KeyRepeat -int 1
-
-  # Disable auto-correct
-  defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
-
-  # Screen
-  #
+  ###############################################################################
+  # Screen                                                                      #
+  ###############################################################################
 
   # Require password immediately after sleep or screen saver begins
   defaults write com.apple.screensaver askForPassword -int 1
   defaults write com.apple.screensaver askForPasswordDelay -int 0
 
+  # Save screenshots to the desktop
+  defaults write com.apple.screencapture location -string "${HOME}/Desktop"
+
+  # Save screenshots in PNG format (other options: BMP, GIF, JPG, PDF, TIFF)
+  defaults write com.apple.screencapture type -string "png"
+
   # Disable shadow in screenshots
   defaults write com.apple.screencapture disable-shadow -bool true
+
+  # Enable subpixel font rendering on non-Apple LCDs
+  # defaults write NSGlobalDomain AppleFontSmoothing -int 2
+
+  # Enable HiDPI display modes (requires restart)
+  # sudo defaults write /Library/Preferences/com.apple.windowserver DisplayResolutionEnabled -bool true
 
   # Dock
   #
@@ -161,21 +162,36 @@ fancy_echo "Setting OSX settings ..."
   defaults write com.apple.dock autohide -bool true
 
   # Make Dock icons of hidden applications translucent
-  defaults write com.apple.dock showhidden -bool true
+  # defaults write com.apple.dock showhidden -bool true
 
   # Make Dock more transparent
-  defaults write com.apple.dock hide-mirror -bool true
+  # defaults write com.apple.dock hide-mirror -bool true
 
-  # Finder
-  #
+
+
+  ###############################################################################
+  # Finder                                                                      #
+  ###############################################################################
+
+  # Finder: allow quitting via ⌘ + Q; doing so will also hide desktop icons
+  # defaults write com.apple.finder QuitMenuItem -bool true
+
+  # Finder: disable window animations and Get Info animations
+  # defaults write com.apple.finder DisableAllAnimations -bool true
 
   # Set Desktop as the default location for new Finder windows
   # For other paths, use `PfLo` and `file:///full/path/here/`
   defaults write com.apple.finder NewWindowTarget -string "PfDe"
-  defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/Desktop/"
+  defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/"
+
+  # Show icons for hard drives, servers, and removable media on the desktop
+  defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
+  defaults write com.apple.finder ShowHardDrivesOnDesktop -bool true
+  defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
+  defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
 
   # Finder: show hidden files by default
-  defaults write com.apple.finder AppleShowAllFiles -bool true
+  #defaults write com.apple.finder AppleShowAllFiles -bool true
 
   # Finder: show all filename extensions
   defaults write NSGlobalDomain AppleShowAllExtensions -bool true
@@ -198,18 +214,102 @@ fancy_echo "Setting OSX settings ..."
   # Disable the warning when changing a file extension
   defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
 
-  # Always open everything in Finder's column view.
-  # defaults write com.apple.Finder FXPreferredViewStyle clmv
-  defaults write com.apple.finder FXPreferredViewStyle -string "clmv"
+  # Enable spring loading for directories
+  defaults write NSGlobalDomain com.apple.springing.enabled -bool true
 
-  # Show the ~/Library folder.
+  # Remove the spring loading delay for directories
+  # defaults write NSGlobalDomain com.apple.springing.delay -float 0
+
+  # Avoid creating .DS_Store files on network volumes
+  defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+
+  # Disable disk image verification
+  # defaults write com.apple.frameworks.diskimages skip-verify -bool true
+  # defaults write com.apple.frameworks.diskimages skip-verify-locked -bool true
+  # defaults write com.apple.frameworks.diskimages skip-verify-remote -bool true
+
+  # Automatically open a new Finder window when a volume is mounted
+  defaults write com.apple.frameworks.diskimages auto-open-ro-root -bool true
+  defaults write com.apple.frameworks.diskimages auto-open-rw-root -bool true
+  defaults write com.apple.finder OpenWindowForNewRemovableDisk -bool true
+
+  # Use list view in all Finder windows by default
+  # Four-letter codes for the other view modes: `icnv`, `clmv`, `Flwv`
+  defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
+
+  # Disable the warning before emptying the Trash
+  defaults write com.apple.finder WarnOnEmptyTrash -bool false
+
+  # Empty Trash securely by default
+  defaults write com.apple.finder EmptyTrashSecurely -bool true
+
+  # Enable AirDrop over Ethernet and on unsupported Macs running Lion
+  defaults write com.apple.NetworkBrowser BrowseAllInterfaces -bool true
+
+  # Enable the MacBook Air SuperDrive on any Mac
+  # sudo nvram boot-args="mbasd=1"
+
+  # Show the ~/Library folder
   chflags nohidden ~/Library
+
+  # Remove Dropbox’s green checkmark icons in Finder
+  # file=/Applications/Dropbox.app/Contents/Resources/emblem-dropbox-uptodate.icns
+  # [ -e "${file}" ] && mv -f "${file}" "${file}.bak"
+
+  # Expand the following File Info panes:
+  # “General”, “Open with”, and “Sharing & Permissions”
+  defaults write com.apple.finder FXInfoPanesExpanded -dict \
+    General -bool true \
+    OpenWith -bool true \
+    Privileges -bool true
+
 
   # Time Machine
   #
 
   # Prevent Time Machine from prompting to use new hard drives as backup volume
   defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
+
+  # Menu bar: hide the Time Machine, Volume, and User icons
+  for domain in ~/Library/Preferences/ByHost/com.apple.systemuiserver.*; do
+    defaults write "${domain}" dontAutoLoad -array \
+      "/System/Library/CoreServices/Menu Extras/TimeMachine.menu" \
+      "/System/Library/CoreServices/Menu Extras/User.menu" \
+      "/System/Library/CoreServices/Menu Extras/Battery.menu" \
+      "/System/Library/CoreServices/Menu Extras/Clock.menu"
+  done
+
+  defaults write com.apple.systemuiserver menuExtras -array \
+    "/System/Library/CoreServices/Menu Extras/Bluetooth.menu" \
+    "/System/Library/CoreServices/Menu Extras/AirPort.menu"
+
+
+  ###############################################################################
+  # Trackpad, mouse, keyboard, Bluetooth accessories, and input                 #
+  ###############################################################################
+
+  # Trackpad: enable tap to click for this user and for the login screen
+  defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+  defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+  defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+
+  # Disable “natural” (Lion-style) scrolling
+  defaults write NSGlobalDomain com.apple.swipescrolldirection -bool false
+
+  # Increase sound quality for Bluetooth headphones/headsets
+  defaults write com.apple.BluetoothAudioAgent "Apple Bitpool Min (editable)" -int 40
+
+  # Use scroll gesture with the Ctrl (^) modifier key to zoom
+  defaults write com.apple.universalaccess closeViewScrollWheelToggle -bool true
+  defaults write com.apple.universalaccess HIDScrollZoomModifierMask -int 262144
+  # Follow the keyboard focus while zoomed in
+  defaults write com.apple.universalaccess closeViewZoomFollowsFocus -bool true
+
+  # Disable press-and-hold for keys in favor of key repeat
+  defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+
+  # Set a blazingly fast keyboard repeat rate
+  defaults write NSGlobalDomain KeyRepeat -int 0
 
 
 less_fancy_echo "Restarting affected apps, some of these changes require a logout/restart ..."
@@ -339,20 +439,9 @@ git_clone() {
 }
 ### end mac-components/git
 
-fancy_echo "Installing Postgres, a good open source relational database ..."
-  brew_install postgres --no-python
 
 fancy_echo "Installing Redis, a good key-value database ..."
   brew_install redis
-
-fancy_echo "Installing The Silver Searcher (better than ack or grep) to search the contents of files ..."
-  brew_install the_silver_searcher
-
-fancy_echo "Installing vim from Homebrew to get the latest version ..."
-  brew_install "vim --override-system-vi"
-
-fancy_echo "Installing ctags, to index files for vim tab completion of methods, classes, variables ..."
-  brew_install ctags
 
 fancy_echo "Installing tmux, to save project state and switch between projects ..."
   brew_install tmux
@@ -363,15 +452,38 @@ fancy_echo "Installing reattach-to-user-namespace, for copy-paste and RubyMotion
 fancy_echo "Installing Bash Completion, for better bash completion ..."
   brew_install bash-completion
 
-fancy_echo "Installing QT, used by Capybara Webkit for headless Javascript integration testing ..."
-  brew_install qt
+fancy_echo "Installing tig, text-mode interface to git..."
+  brew_install tig
 
 fancy_echo "Installing tig, text-mode interface to git..."
   brew_install tig
+
+fancy_echo "Installing curl"
+  brew_install curl
+
+fancy_echo "Installing python"
+  brew_install python
+
+fancy_echo "Installing ruby"
+  brew_install ruby
+
+fancy_echo "Installing nvm"
+  brew_install nvm
+
+fancy_echo "Installing awscli"
+  brew_install awscli
+
+fancy_echo "Installing unrar"
+  brew_install unrar
+
+fancy_echo "Installing gnupg"
+  brew_install gnupg
+
 ### end mac-components/packages
 
 fancy_echo "Installing Brew Cask, to install OSX binaries ..."
   brew_install_or_upgrade caskroom/cask/brew-cask
+  brew_tap caskroom/versions
 
 brew_cask_list() {
   brew cask list 2> /dev/null || true
@@ -402,65 +514,93 @@ brew_cask_link() {
   fi
 }
 
-fancy_echo "Installing Alfred, for quick access to Facebook ..."
-  brew_cask_install alfred
+# fancy_echo "Installing Launchbar, because it rocks ..."
+#   brew_cask_install launchbar
 
-fancy_echo "Installing Caffeine, to fend off sleep ..."
-  brew_cask_install caffeine
+# fancy_echo "Installing Google Chrome, you know you want it ..."
+#   brew_cask_install google-chrome
 
-fancy_echo "Installing Google Chrome, you know you want it ..."
-  brew_cask_install google-chrome
+# fancy_echo "Installing Firefox, you know you want it too ..."
+#   brew_cask_install firefox
 
-fancy_echo "Installing Dropbox, for sharing files ..."
-  brew_cask_install dropbox
+# fancy_echo "Installing Dropbox, for sharing files ..."
+#   brew_cask_install dropbox
 
 fancy_echo "Installing Google Drive, for sharing more files ..."
   brew_cask_install google-drive
 
-fancy_echo "Installing Textmate, for a good scratch pad ..."
-  brew_cask_install textmate
+fancy_echo "Installing Github, in case you forget about 'git add -p' ..."
+  brew_cask_install github
 
-fancy_echo "Installing Gitx (rownaj fork), in case you forget about 'git add -p' ..."
-  brew_cask_install gitx-rowanj
-
-fancy_echo "Installing Day-O, a better menu bar clock + calendar ..."
-  brew_cask_install day-o
+fancy_echo "Installing istat menus since it rocks ..."
+  brew_cask_install istat-menus
 
 fancy_echo "Installing F-lux, to save your eyes ..."
   brew_cask_install flux
+
+# fancy_echo "Installing SimpleComic for something to do while you are compiling ..."
+#   brew_cask_install simple-comic
 
 fancy_echo "Installing iTerm2, almost forgot ..."
   brew_cask_install iterm2
   # set up file extension associations, for auto-installing themes
   start_if_needed iTerm
 
-fancy_echo "Installing Macvim, of course, what took so long ..."
-  brew_cask_install macvim
+fancy_echo "Installing Adium for everything not in slack ..."
+  brew_cask_install adium
 
-fancy_echo "Linking Alfred, so that it sees casks ..."
-  brew_cask_link alfred
+fancy_echo "Installing skype, not sure why"
+  brew_cask_install skype
+
+fancy_echo "Installing CCC"
+  brew_cask_install carbon-copy-cloner
+
+fancy_echo "Installing handbrake"
+  brew_cask_install handbrake
+
+fancy_echo "Installing kaleidoscope"
+  brew_cask_install kaleidoscope
+
+fancy_echo "Installing viscosity"
+  brew_cask_install viscosity
+
+fancy_echo "Installing vlc"
+  brew_cask_install vlc
+
+fancy_echo "Installing java6 for backwards compat"
+  brew_cask_install java6
+
+fancy_echo "Installing java8"
+  brew_cask_install java
+
 ### end mac-components/casks
 
 fancy_echo "Tapping Brew Cask Fonts, to allow easy install of fonts ..."
   brew_tap caskroom/fonts
 
-fancy_echo "Installing Font inconsolata-dz, ohhh, pretty ..."
+fancy_echo "Installing Font anonymous-pro"
   brew_cask_install font-inconsolata-dz
+
+fancy_echo "Installing Font inconsolata-dz, ohhh, pretty ..."
+  brew_cask_install font-anonymous-pro
 
 fancy_echo "Installing Font source-code-pro, not bad ..."
   brew_cask_install font-source-code-pro
+
+fancy_echo "Installing Font source-sans-pro, not bad ..."
+  brew_cask_install font-source-sans-pro
 ### end mac-components/fonts
 
 fancy_echo "Installing wget, because sometimes you need a little wget ..."
   brew_install wget
 
-fancy_echo "Installing ShiftIt (onsi fork), for better window management ..."
-if [ ! -d /Applications/ShiftIt.app ]; then
-    wget https://raw.github.com/onsi/ShiftIt/master/ShiftIt.zip
-    unzip -q ShiftIt.zip
-    rm ShiftIt.zip
-    mv ShiftIt.app /Applications/
-fi
+# fancy_echo "Installing ShiftIt (onsi fork), for better window management ..."
+# if [ ! -d /Applications/ShiftIt.app ]; then
+#     wget https://raw.github.com/onsi/ShiftIt/master/ShiftIt.zip
+#     unzip -q ShiftIt.zip
+#     rm ShiftIt.zip
+#     mv ShiftIt.app /Applications/
+# fi
 
 fancy_echo "Downloading Solarized, for iTerm colours ..."
   if [ ! -d ~/Applications/solarized ]; then
@@ -496,52 +636,6 @@ fancy_echo "Installing Solarized Dark Theme for iTerm ..."
   fi
 ### end mac-components/downloads
 
-fancy_echo "Installing chruby, to change Ruby versions ..."
-  brew_install chruby
-  source /usr/local/share/chruby/chruby.sh
-  source /usr/local/share/chruby/auto.sh
-
-fancy_echo "Installing ruby-install, to install Rubies ..."
-  brew_install_or_upgrade ruby-install
-
-is_ruby_version_installed() {
-  chruby | grep -q "ruby-$1"
-}
-
-ruby_install() {
-  if is_ruby_version_installed $1; then
-    less_fancy_echo "... skipping ruby $1, already installed"
-  else
-    ruby-install ruby $1
-  fi
-
-  source /usr/local/share/chruby/chruby.sh
-
-  true
-}
-### end mac-components/chruby
-
-ruby_version="2.2.0"
-
-fancy_echo "Installing Ruby $ruby_version ..."
-  ruby_install "$ruby_version"
-
-fancy_echo "Setting $ruby_version as global default Ruby ..."
-  chruby $ruby_version
-  echo "ruby-$ruby_version" > ~/.ruby-version
-
-fancy_echo "Updating to latest Rubygems version ..."
-  gem update --system
-
-fancy_echo "Installing Bundler to install project-specific Ruby gems ..."
-  gem install bundler --no-document --pre
-### end common-components/ruby-environment
-
-fancy_echo "Configuring Bundler for faster, parallel gem installation ..."
-  number_of_cores=$(sysctl -n hw.ncpu)
-  bundle config --global jobs $((number_of_cores - 1))
-### end mac-components/bundler
-
 fancy_echo "Installing Heroku CLI client ..."
   brew_install heroku-toolbelt
 
@@ -549,45 +643,12 @@ fancy_echo "Installing the heroku-config plugin to pull config variables locally
   heroku plugins:install git://github.com/ddollar/heroku-config.git
 ### end mac-components/heroku
 
-fancy_echo "Installing thoughbot rcm, to manage your dotfiles ..."
-  brew_tap thoughtbot/formulae
-  brew_install rcm
-### end mac-components/rcm
-
-fancy_echo "Starting Postgres ..."
-  # brew_start postgres
-  if [[ -z $(ps aux | grep "[p]ostgres") ]]; then
-    # initdb /usr/local/var/postgres -E utf8
-    mkdir -p ~/Library/LaunchAgents
-    ln -sfv /usr/local/opt/postgresql/*.plist ~/Library/LaunchAgents
-    launchctl load ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist
-  fi
-
-fancy_echo "Starting Menu Bar Apps ..."
-  start_if_needed Day-O
-  start_if_needed Dropbox
-  start_if_needed Caffeine
-  start_if_needed ShiftIt
-### end mac-components/start-services
-
 fancy_echo "Cleaning up Brew ..."
   brew cleanup
 
 fancy_echo "Cleaning up Brew Cask ..."
   brew cask cleanup
 ### end mac-components/cleanup
-
-fancy_echo "Creating workspace ..."
-  mkdir -p ~/workspace
-
-fancy_echo "Cloning Dotfiles ..."
-  git_clone https://github.com/attack/dotfiles.git ~/workspace/dotfiles
-  git_clone https://github.com/attack/vim-bootstrap.git ~/workspace/vim-bootstrap
-
-fancy_echo "Symlinking Dotfiles ..."
-  rcup -v -d ~/workspace/dotfiles -x README.md -x Brewfile -x install -x LICENSE -x tags
-  rcup -v -d ~/workspace/vim-bootstrap -x README.md -x Brewfile -x install -x LICENSE -x tags
-### end common-components/dotfiles
 
 fancy_echo "Installing your shared additions from ~/.laptop.shared ..."
   if [[ -f ~/.laptop.shared ]]; then

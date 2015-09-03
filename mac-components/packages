@@ -23,6 +23,9 @@ fancy_echo "Installing curl"
 fancy_echo "Installing python"
   brew_install python
 
+fancy_echo "Installing ruby"
+  brew_install ruby
+
 fancy_echo "Installing nvm"
   brew_install nvm
 

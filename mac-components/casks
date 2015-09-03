@@ -31,17 +31,17 @@ brew_cask_link() {
   fi
 }
 
-fancy_echo "Installing Launchbar, because it rocks ..."
-  brew_cask_install launchbar
+# fancy_echo "Installing Launchbar, because it rocks ..."
+#   brew_cask_install launchbar
 
-fancy_echo "Installing Google Chrome, you know you want it ..."
-  brew_cask_install google-chrome
+# fancy_echo "Installing Google Chrome, you know you want it ..."
+#   brew_cask_install google-chrome
 
-fancy_echo "Installing Firefox, you know you want it too ..."
-  brew_cask_install firefox
+# fancy_echo "Installing Firefox, you know you want it too ..."
+#   brew_cask_install firefox
 
-fancy_echo "Installing Dropbox, for sharing files ..."
-  brew_cask_install dropbox
+# fancy_echo "Installing Dropbox, for sharing files ..."
+#   brew_cask_install dropbox
 
 fancy_echo "Installing Google Drive, for sharing more files ..."
   brew_cask_install google-drive
@@ -55,8 +55,8 @@ fancy_echo "Installing istat menus since it rocks ..."
 fancy_echo "Installing F-lux, to save your eyes ..."
   brew_cask_install flux
 
-fancy_echo "Installing SimpleComic for something to do while you are compiling ..."
-  brew_cask_install simple-comic
+# fancy_echo "Installing SimpleComic for something to do while you are compiling ..."
+#   brew_cask_install simple-comic
 
 fancy_echo "Installing iTerm2, almost forgot ..."
   brew_cask_install iterm2
